@@ -2,8 +2,9 @@
   "name": "dropbox",
   "version": "1.0.0",
   "description": "imie project",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
+    "start": "pm2 kill && pm2 start main.js --watch && pm2 logs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

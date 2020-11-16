@@ -1,13 +1,23 @@
 const User = require('../models/user');
 
+
+//Valider l'adresse email de l'utilisateur
+function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
 // vérifier que tous les champs sont renseignés
 module.exports.verifyPostData  = async (req, res, next) =>{
     if (!req.body.username)
         return res.status(401).send({ message: 'Aucun username fourni' });
     if (!req.body.email)
         return res.status(401).send({ message: 'Aucun email fourni' });
+    if (!validateEmail(req.body.email))
+        return res.status(401).send({ message: 'Adresse email invalide' });
     if (!req.body.password)
         return res.status(401).send({ message: 'Aucun Mot de passe fourni' });
+    if (req.body.password.length < 4)
+        return res.status(401).send({ message: 'Mot de passe court' });
     next();
 };
 

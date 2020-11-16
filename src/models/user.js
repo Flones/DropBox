@@ -6,18 +6,18 @@ const userShema = new Schema({
         type: String,
         trim: true,
         unique: true,
-        required: true,
+        required: [true, "Nom d'utilisateur..."]
     },
     email: {
         type: String,
         trim: true,
         unique: true,
-        required: true,
+        required : [true, "Adresse email..."]
     },
     password: {
         type: String,
         trim: true,
-        required: true,
+        required: [true, "Mot de passe..."]
     },
     isActive: Boolean,
     

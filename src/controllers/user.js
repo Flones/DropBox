@@ -33,39 +33,33 @@ module.exports.inscription = (req, res) => {
 
 };
 
-// connexion de l'utilisateur
-module.exports.connexion = async (req, res) =>{
-    try {
-        const user =  User.findOne({email:req.body.email})
-        if(!user)
-            return res.status(400).json({ message: "Cette adresse email n'existe pas..." });
-        const isMathPassword =  bcrypt.compare(req.body.password, user.password);
-        if(!isMathPassword)
-            return res.status(400).json({ message: "Mot de passe incorrect...", token: null });
-        //créer un token  de l'utilisateur et le connecter si les informations sont valides
+// connexion de l'utilisateur avec generation du token
+module.exports.connexion =  async (req, res) =>{
+    User.findOne({
+        email: req.body.email
+    }).exec((err, user) => {
+        if (err) {
+            res.status(500).send({ message: err });
+            return;
+        }
+        if (!user) {
+            res.status(400).send({ message: "Cette adresse email n'existe pas..."});
+            return;
+        }
+        var isMathPassword = bcrypt.compareSync(req.body.password, user.password);
+        if (!isMathPassword)
+            return res.status(401).send({ message: "Mot de passe invalide...", accessToken: null });
+        //creation du token de l'utilisateur pour la connexion
         createAccessToken = (_id) => {
             return jwt.sign({ id: _id }, config.cleSecret, {
                 expiresIn: 86400 // expire dans 24 heures
             });
         }
         const userToken = createAccessToken(user._id);
-        let infoUser = {};
+        const infoUser = {};
         infoUser.id = user._id;
         infoUser.username = user.username;
         infoUser.isActive = user.isActive;
-        return res.status(200).send({ message: "Vous êtes connecté...",token: userToken, infoUser : infoUser});
-    } catch (err) {
-        return res.status(500).json({ message: err.message});
-    }
+        return res.status(200).send({ message: "Vous êtes connecté...", userToken: userToken, infoUser: infoUser });
+    });
 };
-
-
-
-    
-
-
-
-
-        
-
-

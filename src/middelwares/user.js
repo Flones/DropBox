@@ -53,11 +53,13 @@ module.exports.checkDuplicateData = async (req, res, next) => {
 };
 
 //Middelware pour l'email et password avant la connexion
-module.exports.VerifyLoginData  = async (req, res, next) => {
-    if (req.body.email)
-        return res.status(401).send({ message: 'Aucun email fourni...' });
-    if (req.body.password)
-        return res.status(401).send({ message: 'Aucun Mot de passe fourni...' });
+module.exports.verifyLoginData = async (req, res, next) => {
+    if (!req.body.email)
+        return res.status(401).send({ message: 'Aucun email fourni' });
+    if (!req.body.password)
+        return res.status(401).send({ message: 'Aucun Mot de passe fourni' });
     next();
+
 };
+
 

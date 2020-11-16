@@ -7,6 +7,6 @@ const controller = require('../controllers/user');
 userRoutes.post('/inscription', [middlewares.checkDuplicateData, middlewares.verifyPostData], controller.inscription)
 
 // Connexion de l'utilisateur
-userRoutes.post('/connexion', middlewares.VerifyLoginData, controller.connexion )
+userRoutes.post('/connexion', middlewares.verifyLoginData, controller.connexion )
 
 module.exports = userRoutes;

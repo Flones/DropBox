@@ -1,7 +1,7 @@
 const userRoutes = require('./userRoutes'),
       routes = require('express').Router();
 
-// inscription 
+// inscription, connexion 
 routes.use('/user', userRoutes);
 
 module.exports = routes;

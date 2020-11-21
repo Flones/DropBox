@@ -1,13 +1,13 @@
 const bcrypt = require('bcryptjs'),
-      config = require('../../env'),
-      jwt = require('jsonwebtoken'); //pour créer, signer et vérifier les jetons
-      User = require('../models/user');
+    config = require('../../env'),
+    jwt = require('jsonwebtoken'); //pour créer, signer et vérifier les jetons
+const User = require('../models/user');
 
 //enregistrement d'un utilisateur
 module.exports.inscription = (req, res) => {
     //crypter le mot de passe de l'utilisateur
-    bcrypt.hash(req.body.password, 10, (err, hashpasswod) =>{
-        if(err){
+    bcrypt.hash(req.body.password, 10, (err, hashpasswod) => {
+        if (err) {
             res.json({
                 error: err
             })
@@ -34,7 +34,7 @@ module.exports.inscription = (req, res) => {
 };
 
 // connexion de l'utilisateur avec generation du token
-module.exports.connexion =  async (req, res) =>{
+module.exports.connexion = async(req, res) => {
     User.findOne({
         email: req.body.email
     }).exec((err, user) => {
@@ -43,7 +43,7 @@ module.exports.connexion =  async (req, res) =>{
             return;
         }
         if (!user) {
-            res.status(400).send({ message: "Cette adresse email n'existe pas..."});
+            res.status(400).send({ message: "Cette adresse email n'existe pas..." });
             return;
         }
         var isMathPassword = bcrypt.compareSync(req.body.password, user.password);
@@ -63,3 +63,28 @@ module.exports.connexion =  async (req, res) =>{
         return res.status(200).send({ message: "Vous êtes connecté...", userToken: userToken, infoUser: infoUser });
     });
 };
+
+// récuper les informartions d'un utilisateur
+module.exports.findOneUser = async(req, res) => {
+    try {
+        User.findById(req.userId, { password: 0 }, (err, user) => {
+            if (err) return res.status(500).send("There was a problem finding the user.");
+            if (!user) return res.status(404).send("No user found.");
+            res.status(200).send(user)
+        });
+    } catch (err) {
+        return res.status(500).send({ message: err.message });
+    }
+};
+
+// récuper les informartions des utilisateurs sans le mot de passe
+module.exports.findAllUsers = async(req, res) => {
+    try {
+        User.find({}, function(err, users) {
+            if (err) return res.status(500).send("Un problème dans le recherche des utilisateurs");
+            res.status(200).send(users);
+        });
+    } catch (err) {
+        return res.status(500).send({ message: err.message });
+    }
+}

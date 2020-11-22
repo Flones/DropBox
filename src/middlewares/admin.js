@@ -5,7 +5,7 @@ module.exports.RoleAdmin = async(req, res, next) => {
     try {
         User.findById(req.userId, { password: 0 }, (err, user) => {
             if (user.role !== 1)
-                return res.status(500).send({ message: "Vous ne disposez pas le droit Admin" });
+                return res.status(500).send({ message: "Vous ne disposez pas des droit Admin" });
             next()
         });
 

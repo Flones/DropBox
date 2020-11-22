@@ -17,7 +17,7 @@ module.exports.verifyPostData = async(req, res, next) => {
     if (!req.body.password)
         return res.status(401).send({ message: 'Aucun Mot de passe fourni' });
     if (req.body.password.length < 4)
-        return res.status(401).send({ message: 'Mot de passe court' });
+        return res.status(401).send({ message: 'Mot de passe trop court' });
     next();
 };
 

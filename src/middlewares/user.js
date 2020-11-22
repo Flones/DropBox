@@ -7,7 +7,7 @@ function validateEmail(email) {
     return re.test(email);
 }
 // vérifier que tous les champs sont renseignés
-module.exports.verifyPostData  = async (req, res, next) =>{
+module.exports.verifyPostData = async(req, res, next) => {
     if (!req.body.username)
         return res.status(401).send({ message: 'Aucun username fourni' });
     if (!req.body.email)
@@ -17,12 +17,12 @@ module.exports.verifyPostData  = async (req, res, next) =>{
     if (!req.body.password)
         return res.status(401).send({ message: 'Aucun Mot de passe fourni' });
     if (req.body.password.length < 4)
-        return res.status(401).send({ message: 'Mot de passe court' });
+        return res.status(401).send({ message: 'Mot de passe trop court' });
     next();
 };
 
 // vérifier les duplications du username et de email avant l'enregistrement en BD
-module.exports.checkDuplicateData = async (req, res, next) => {
+module.exports.checkDuplicateData = async(req, res, next) => {
     //Username
     User.findOne({
         username: req.body.username
@@ -53,7 +53,7 @@ module.exports.checkDuplicateData = async (req, res, next) => {
 };
 
 //Middelware pour l'email et password avant la connexion
-module.exports.verifyLoginData = async (req, res, next) => {
+module.exports.verifyLoginData = async(req, res, next) => {
     if (!req.body.email)
         return res.status(401).send({ message: 'Aucun email fourni' });
     if (!req.body.password)
@@ -61,5 +61,3 @@ module.exports.verifyLoginData = async (req, res, next) => {
     next();
 
 };
-
-

@@ -43,15 +43,15 @@ module.exports.connexion = async(req, res) => {
             return;
         }
         if (!user) {
-            res.status(400).send({ message: "Cette adresse email n'existe pas..." });
+            res.status(400).send({ message: "Cette adresse email n'existe pas" });
             return;
         }
         var isMathPassword = bcrypt.compareSync(req.body.password, user.password);
         if (!isMathPassword)
-            return res.status(401).send({ message: "Mot de passe invalide...", accessToken: null });
+            return res.status(401).send({ message: "Mot de passe invalide", accessToken: null });
         //creation du token de l'utilisateur pour la connexion
         createAccessToken = (_id) => {
-            return jwt.sign({ id: _id }, config.cleSecret, {
+            return jwt.sign({ id: _id }, config.CLE_SECRET, {
                 expiresIn: 86400 // expire dans 24 heures
             });
         }
@@ -61,6 +61,24 @@ module.exports.connexion = async(req, res) => {
         infoUser.username = user.username;
         infoUser.isActive = user.isActive;
         return res.status(200).send({ message: "Vous êtes connecté...", userToken: userToken, infoUser: infoUser });
+    });
+};
+
+//Envoyer un email à l'utilisateur pour renitialiser son mot de passe
+module.exports.forgotPassword = async(req, res) => {
+    User.findOne({
+        email: req.body.email
+    }).exec((err, user) => {
+        if (err) return res.status(500).send({ message: err });
+        if (!user) return res.status(400).send({ message: "Cette adresse email n'existe pas" });
+        //si ok, générer le token et envoi d'email
+        createAccessToken = (_id) => {
+            return jwt.sign({ id: _id }, config.cleSecret, {
+                expiresIn: 86400 // expire dans 24 heures
+            });
+        }
+        const accessToken = createAccessToken(user._id)
+        const url = `${config.CLIENT_URL}/user/reset${accessToken}`
     });
 };
 

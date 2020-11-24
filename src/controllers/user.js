@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs'),
     config = require('../../env'),
     jwt = require('jsonwebtoken'); //pour créer, signer et vérifier les jetons
 const User = require('../models/user');
+const sendMail = require('./sendMail');
 
 //enregistrement d'un utilisateur
 module.exports.inscription = (req, res) => {
@@ -79,6 +80,8 @@ module.exports.forgotPassword = async(req, res) => {
         }
         const accessToken = createAccessToken(user._id)
         const url = `${config.CLIENT_URL}/user/reset${accessToken}`
+        sendMail(req.body.email, url, "Rénitialisation de votre Mot de passe");
+        res.status(200).send({ message: "Vérifier votre boite email pour valider" });
     });
 };
 

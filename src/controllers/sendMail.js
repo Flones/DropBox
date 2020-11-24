@@ -14,7 +14,7 @@ const oauth2Client = new OAuth2(
 )
 
 // send email
-const sendMail = (to, url) => {
+const sendMail = (to, url, text) => {
     oauth2Client.setCredentials({
         refresh_token: config.MAIL_SERVICE_REFRECH_TOKEN
     })
@@ -39,7 +39,7 @@ const sendMail = (to, url) => {
             <div style="max-width: 700px; margin:auto; border: 10px solid #ddd; padding: 50px 20px; font-size: 110%;">
             <h2 style="text-align: center; text-transform: uppercase;color: teal;">Bienvenue sur l'application Dropboite</h2>
             <p>
-                Veuillez cliquer sur ce bouton pour valider votre email
+                Afin de rénitialiser votre mot de passe, veuillez cliquer sur ce bouton. 
             </p>
             
             <a href=${url} style="background: crimson; text-decoration: none; color: white; padding: 10px 20px; margin: 10px 0; display: inline-block;">${txt}</a>

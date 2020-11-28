@@ -15,7 +15,7 @@ userRoutes.post('/connexion', middleUser.verifyLoginData, controller.connexion)
 // envoie d'email pour la renitialisation du mot de passe de l'utilisateur
 userRoutes.post('/forgot', middleUser.emailForgotPassword, controller.forgotPassword)
 
-//renitialiser le mot de passe de l'utilisateur
+//Rénitialiser le mot de passe de l'utilisateur
 userRoutes.post('/reset', [middleToken.verifyToken, middleUser.verifynewPassword], controller.resetPassword)
 
 // Récuper les informations de l'utilisateur courant
@@ -23,5 +23,8 @@ userRoutes.get('/profile', middleToken.verifyToken, controller.findOneUser)
 
 // Récupérer les informations de tout les utilisateurs
 userRoutes.get('/admin', [middleToken.verifyToken, middleAdmin.RoleAdmin], controller.findAllUsers)
+
+// Supprimer un utilisateur
+userRoutes.delete('/delete/:id', [middleToken.verifyToken, middleAdmin.RoleAdmin], controller.deleteUser)
 
 module.exports = userRoutes;

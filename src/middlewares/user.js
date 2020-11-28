@@ -68,3 +68,12 @@ module.exports.emailForgotPassword = (req, res, next) => {
         return res.status(401).send({ message: "Veuillez saisir votre email" })
     next();
 }
+
+// Middelware pour la validité de l'email de renitialisation du mot de passe
+module.exports.verifynewPassword = (req, res, next) => {
+    if (!req.body.password)
+        return res.status(401).send({ message: "Veuillez saisir votre nouveau mot de passe" })
+    if (req.body.password.length < 4)
+        return res.status(401).send({ message: "Mot de passe trop court" })
+    next();
+}

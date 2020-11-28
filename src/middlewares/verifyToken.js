@@ -7,11 +7,11 @@ module.exports.verifyToken = (req, res, next) => {
         var token = req.headers['x-access-token'];
         if (!token)
             return res.status(400).send({ message: "Connectez vous SVP..." });
-        jwt.verify(token, config.cleSecret, (err, decoded) => {
+        jwt.verify(token, config.CLE_SECRET, (err, user) => {
             if (err)
                 return res.status(400).send({ message: "Authentification invalide" });
             //si tout est ok il peut accéder à la page dédiée
-            req.userId = decoded.id
+            req.user = user
             next()
         })
     } catch (err) {

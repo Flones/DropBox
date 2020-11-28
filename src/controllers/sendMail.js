@@ -1,8 +1,8 @@
-const config = require('../../env')
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 const { OAuth2 } = google.auth;
-const oauth_playground = 'https://developers.google.com/oauthplayground'
+const OAUTH_PLAYGROUND = 'https://developers.google.com/oauthplayground';
+const config = require('../../env')
 
 // configuration de l'envoie email
 const oauth2Client = new OAuth2(
@@ -10,11 +10,11 @@ const oauth2Client = new OAuth2(
     config.MAIL_CODE_CLIENT_SECRET,
     config.MAIL_SERVICE_REFRECH_TOKEN,
     config.ADDRESS_EMAIL_ENVOI,
-    oauth_playground
+    OAUTH_PLAYGROUND
 )
 
 // send email
-const sendMail = (to, url, text) => {
+const sendMail = (to, url, message) => {
     oauth2Client.setCredentials({
         refresh_token: config.MAIL_SERVICE_REFRECH_TOKEN
     })
@@ -25,8 +25,9 @@ const sendMail = (to, url, text) => {
         auth: {
             type: 'OAuth2',
             user: config.ADDRESS_EMAIL_ENVOI,
-            IdClient: config.ID_CLIENT_SERVICE_MAIL,
-            refrechToken: config.MAIL_SERVICE_REFRECH_TOKEN,
+            clientId: config.ID_CLIENT_SERVICE_MAIL,
+            clientSecret: config.MAIL_CODE_CLIENT_SECRET,
+            refreshToken: config.MAIL_SERVICE_REFRECH_TOKEN,
             accessToken
         }
     });
@@ -42,18 +43,18 @@ const sendMail = (to, url, text) => {
                 Afin de rénitialiser votre mot de passe, veuillez cliquer sur ce bouton. 
             </p>
             
-            <a href=${url} style="background: crimson; text-decoration: none; color: white; padding: 10px 20px; margin: 10px 0; display: inline-block;">${txt}</a>
+            <a href=${url} style="background: crimson; text-decoration: none; color: white; padding: 10px 20px; margin: 10px 0; display: inline-block;">${message}</a>
         
-            <p>Si le bouton ne fonctionne pas vous pouvez cliquer sur ce lien.</p>
+            <p>Si le bouton ne fonctionne pas vous pouvez cliquer sur ce lien ou le copier et coller dans le navigateur</p>
         
             <div>${url}</div>
             </div>
         `
     }
 
-    smptTransport.sendMail(mailOptions, (err, information) => {
+    smptTransport.sendMail(mailOptions, (err, infor) => {
         if (err) return err
-        return information;
+        return infor;
     });
 }
 

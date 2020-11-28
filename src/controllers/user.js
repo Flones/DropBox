@@ -1,6 +1,6 @@
-const bcrypt = require('bcryptjs'),
-    config = require('../../env'),
-    jwt = require('jsonwebtoken'); //pour créer, signer et vérifier les jetons
+const bcrypt = require('bcryptjs');
+const config = require('../../env');
+const jwt = require('jsonwebtoken'); //pour créer, signer et vérifier les jetons
 const User = require('../models/user');
 const sendMail = require('./sendMail');
 
@@ -67,22 +67,27 @@ module.exports.connexion = async(req, res) => {
 
 //Envoyer un email à l'utilisateur pour renitialiser son mot de passe
 module.exports.forgotPassword = async(req, res) => {
-    User.findOne({
-        email: req.body.email
-    }).exec((err, user) => {
-        if (err) return res.status(500).send({ message: err });
-        if (!user) return res.status(400).send({ message: "Cette adresse email n'existe pas" });
-        //si ok, générer le token et envoi d'email
-        createAccessToken = (_id) => {
-            return jwt.sign({ id: _id }, config.cleSecret, {
-                expiresIn: 86400 // expire dans 24 heures
-            });
-        }
-        const accessToken = createAccessToken(user._id)
-        const url = `${config.CLIENT_URL}/user/reset${accessToken}`
-        sendMail(req.body.email, url, "Rénitialisation de votre Mot de passe");
-        res.status(200).send({ message: "Vérifier votre boite email pour valider" });
-    });
+    try {
+        User.findOne({
+            email: req.body.email
+        }).exec((err, user) => {
+            if (err) return res.status(500).send({ message: err });
+            if (!user) return res.status(400).send({ message: "Cette adresse email n'existe pas" });
+            //si ok, générer le token et envoi d'email
+            createAccessToken = (_id) => {
+                return jwt.sign({ id: _id }, config.CLE_SECRET, {
+                    expiresIn: 86400 // expire dans 24 heures
+                });
+            }
+            console.log(req.body.email)
+            const accessToken = createAccessToken(user._id)
+            const url = `${config.CLIENT_URL}/user/reset${accessToken}`
+            sendMail(req.body.email, url, "Nouveau mot de passe");
+            res.status(200).send({ message: "Vérifier votre boite email afin de finaliser la renitialisation" });
+        });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
 };
 
 // récuper les informartions d'un utilisateur

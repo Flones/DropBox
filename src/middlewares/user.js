@@ -63,7 +63,8 @@ module.exports.verifyLoginData = async(req, res, next) => {
 };
 
 //Middelware pour la validité de l'email de renitialisation du mot de passe
-module.exports.emailForgotPassword = function(req, res, next) {
+module.exports.emailForgotPassword = (req, res, next) => {
     if (!req.body.email)
         return res.status(401).send({ message: "Veuillez saisir votre email" })
+    next();
 }

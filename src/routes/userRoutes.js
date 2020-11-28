@@ -12,8 +12,12 @@ userRoutes.post('/inscription', [middleUser.checkDuplicateData, middleUser.verif
 // Connexion de l'utilisateur
 userRoutes.post('/connexion', middleUser.verifyLoginData, controller.connexion)
 
+// Rénitialisation du mot de passe avec envoie de d'email
+userRoutes.post('/forgot', middleUser.emailForgotPassword, controller.forgotPassword)
+
 // Récuper les informations de l'utilisateur courant
 userRoutes.get('/profile', middleToken.verifyToken, controller.findOneUser)
+
 
 // Récupérer les informations de tout les utilisateurs
 userRoutes.get('/admin', [middleToken.verifyToken, middleAdmin.RoleAdmin], controller.findAllUsers)

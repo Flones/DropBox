@@ -35,8 +35,6 @@ module.exports.inscription = (req, res) => {
 
     },
 
-
-
     // connexion de l'utilisateur avec generation du token
     module.exports.connexion = async(req, res) => {
         User.findOne({
@@ -130,6 +128,15 @@ module.exports.inscription = (req, res) => {
                 if (err) return res.status(500).send("Un problème dans le recherche des utilisateurs");
                 res.status(200).send(users);
             });
+        } catch (err) {
+            return res.status(500).send({ message: err.message });
+        }
+    },
+
+    //Déconnecter un utilisateur
+    module.exports.LogoutUser = async(req, res) => {
+        try {
+            res.status(200).send({ auth: false, token: null });
         } catch (err) {
             return res.status(500).send({ message: err.message });
         }

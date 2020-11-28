@@ -24,4 +24,7 @@ userRoutes.get('/profile', middleToken.verifyToken, controller.findOneUser)
 // Récupérer les informations de tout les utilisateurs
 userRoutes.get('/admin', [middleToken.verifyToken, middleAdmin.RoleAdmin], controller.findAllUsers)
 
+// Déconnecter l'utilisateur
+userRoutes.get('/logout', controller.LogoutUser)
+
 module.exports = userRoutes;

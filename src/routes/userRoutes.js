@@ -27,4 +27,7 @@ userRoutes.get('/admin', [middleToken.verifyToken, middleAdmin.RoleAdmin], contr
 // Supprimer un utilisateur
 userRoutes.delete('/delete/:id', [middleToken.verifyToken, middleAdmin.RoleAdmin], controller.deleteUser)
 
+// Déconnecter l'utilisateur
+userRoutes.get('/logout', controller.LogoutUser)
+
 module.exports = userRoutes;

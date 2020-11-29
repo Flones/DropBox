@@ -92,7 +92,6 @@ module.exports.inscription = (req, res) => {
         }
     },
 
-
     //Rénitialisation du mot de passe de l'utilisateur
     module.exports.resetPassword = async(req, res) => {
         try {
@@ -107,7 +106,7 @@ module.exports.inscription = (req, res) => {
         }
     },
 
-    // récuper les informartions d'un utilisateur
+    // récuper les informartions de l'utilisateur courant
     module.exports.findOneUser = async(req, res) => {
         try {
             User.findById(req.user.id, { password: 0 }, (err, user) => {
@@ -119,7 +118,6 @@ module.exports.inscription = (req, res) => {
             return res.status(500).send({ message: err.message });
         }
     },
-
 
     // récuper les informartions des utilisateurs sans le mot de passe
     module.exports.findAllUsers = async(req, res) => {
@@ -133,10 +131,19 @@ module.exports.inscription = (req, res) => {
         }
     },
 
+    // Suppression d'un utilisateur
+    module.exports.deleteUser = async(req, res) => {
+        try {
+            await User.findByIdAndRemove(req.params.id, (err, user) => {
+                if (err) return res.status(500).send("Un problème dans la suppression de l'utilisateur");
+                res.status(200).send({ message: "Utilisateur supprimé avec succès" });
+            })
+          
     //Déconnecter un utilisateur
     module.exports.LogoutUser = async(req, res) => {
         try {
             res.status(200).send({ auth: false, token: null });
+
         } catch (err) {
             return res.status(500).send({ message: err.message });
         }

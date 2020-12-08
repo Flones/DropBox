@@ -138,7 +138,10 @@ module.exports.inscription = (req, res) => {
                 if (err) return res.status(500).send("Un problème dans la suppression de l'utilisateur");
                 res.status(200).send({ message: "Utilisateur supprimé avec succès" });
             })
-          
+        } catch (err) {
+            return res.status(500).send({ message: err.message });
+        }
+    }
     //Déconnecter un utilisateur
     module.exports.LogoutUser = async(req, res) => {
         try {

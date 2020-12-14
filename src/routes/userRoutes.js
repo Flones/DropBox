@@ -4,8 +4,6 @@ const middleAdmin = require('../middlewares/admin');
 const middleToken = require('../middlewares/verifyToken');
 const controller = require('../controllers/user');
 
-
-
 // enregistrer de l'utilisateur
 userRoutes.post('/inscription', [middleUser.checkDuplicateData, middleUser.verifyPostData], controller.inscription)
 

@@ -35,6 +35,8 @@ module.exports.inscription = (req, res) => {
 
     },
 
+
+
     // connexion de l'utilisateur avec generation du token
     module.exports.connexion = async(req, res) => {
         User.findOne({
@@ -138,7 +140,12 @@ module.exports.inscription = (req, res) => {
                 if (err) return res.status(500).send("Un problème dans la suppression de l'utilisateur");
                 res.status(200).send({ message: "Utilisateur supprimé avec succès" });
             })
-          
+        } catch (err) {
+            return res.status(500).send({ message: err.message });
+        }
+    },
+
+
     //Déconnecter un utilisateur
     module.exports.LogoutUser = async(req, res) => {
         try {
@@ -148,3 +155,18 @@ module.exports.inscription = (req, res) => {
             return res.status(500).send({ message: err.message });
         }
     }
+
+
+
+/*   controller.uploadFiles = function(req,res){
+    let filesPath = _.map(req.files, function(file){ return file.originalname});
+    Dossier.findOneAndUpdate(
+        { _id: req.params.id },
+        { $push: { files: { $each: filesPath } } },
+        {new : true}
+        function(err, dossier){
+            res.send(dossier);
+        }
+     );
+}
+*/

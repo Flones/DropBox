@@ -2,29 +2,25 @@ const filesRoutes = require('express').Router();
 const middleToken = require('../middlewares/verifyToken');
 const middleFiles = require('../middlewares/uploadFile');
 const controller = require('../controllers/uploadFile');
-const fs = require('fs-extra');
+const fs = require('fs');
 const multer = require('multer');
 
-
-const BASE_DIR = './uploads/';
-// lieu de stockage des fichiers
-const storage = multer.diskStorage({
-    // file destination
-    destination: (req, file, cb) => {
-        let stockagedata = BASE_DIR + '/';
-        fs.ensureDirSync(stockagedata);
-        cb(null, stockagedata)
+var storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        let dirCandidate = './uploads/'
+        fs.mkdirSync(dirCandidate);
+        cb(null, 'dirCandidate')
     },
-    // rename file
-    filename: (req, file, cb) => {
-        cb(null, file.originalname);
+    filename: function(req, file, cb) {
+        cb(null, file.originalname)
     }
-});
-const upload = multer({ storage: storage });
+})
+var upload = multer({ dest: './uploads/', inMemory: true, storage: storage });
+// var upload = multer({ storage: storage });
 
 
 // Upload des fichiers
 //, [middleToken.verifyToken, middleFiles.middelFiles]
-filesRoutes.post('/upload', upload.array("files"), controller.uploadFiles);
+filesRoutes.post('/upload', middleFiles.middelFiles, upload.single('files'), controller.uploadFiles)
 
 module.exports = filesRoutes;

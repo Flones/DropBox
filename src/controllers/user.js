@@ -155,18 +155,3 @@ module.exports.inscription = (req, res) => {
             return res.status(500).send({ message: err.message });
         }
     }
-
-
-
-/*   controller.uploadFiles = function(req,res){
-    let filesPath = _.map(req.files, function(file){ return file.originalname});
-    Dossier.findOneAndUpdate(
-        { _id: req.params.id },
-        { $push: { files: { $each: filesPath } } },
-        {new : true}
-        function(err, dossier){
-            res.send(dossier);
-        }
-     );
-}
-*/

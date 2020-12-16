@@ -1,12 +1,16 @@
+const User = require('./user');
+
 const mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 const fileSchema = new Schema({
-    filename: {
+    file: {
         type: String,
-        trim: true,
-        unique: true,
-        required: [true, "Nom du fichier..."]
+        //required: [true, "Nom du fichier..."]
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: User,
     },
 }, { timestamps: true });
 

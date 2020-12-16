@@ -66,7 +66,6 @@ module.exports.inscription = (req, res) => {
         });
     },
 
-
     //Envoyer un email à l'utilisateur pour renitialiser son mot de passe
     module.exports.forgotPassword = async(req, res) => {
         try {
@@ -146,7 +145,7 @@ module.exports.inscription = (req, res) => {
     module.exports.LogoutUser = async(req, res) => {
         try {
             res.status(200).send({ auth: false, token: null });
-
+            
         } catch (err) {
             return res.status(500).send({ message: err.message });
         }

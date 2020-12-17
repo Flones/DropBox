@@ -40,7 +40,7 @@ const storage =   multer.diskStorage({
       })
     },
     filename: function (req, file, callback) {
-        callback(null, Date.now() + "___" + path.basename(file.originalname)/*  + path.extname(file.originalname) */);
+        callback(null, path.basename(file.originalname) + "_" + Date.now() /*  + path.extname(file.originalname) */);
     }
   });
 
@@ -49,6 +49,7 @@ module.exports.upload2 = function(req,res){
         storage: storage,
         fileFilter: function (req, file, callback) {
             var ext = path.extname(file.originalname);
+            var tab = ['.png']
             if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg' && ext !== '.pdf') {
                 return callback(new Error('Only images are allowed'))
             }
@@ -57,9 +58,9 @@ module.exports.upload2 = function(req,res){
     }).single('filename');
       partial(req,res,function(err) {
           if(err) {
-              return res.end("Error uploading file.");
+              return res.status(500).send("Error uploading file.");
           }
-          res.end("File is uploaded");
+          res.status(200).send("File is uploaded");
       });
   }
 

@@ -6,7 +6,7 @@ const mongoose = require('mongoose'),
 const fileSchema = new Schema({
     file: {
         type: String,
-        //required: [true, "Nom du fichier..."]
+        required: [true, "Nom du fichier..."]
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,

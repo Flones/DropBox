@@ -6,7 +6,7 @@ var dir = "./uploads"
 
 
 // Upload d'un file
-module.exports.upload = (req, res) => {
+module.exports.upload2 = (req, res) => {
 
     let file = new File({
         filename: req.body.filename,
@@ -44,14 +44,16 @@ const storage =   multer.diskStorage({
     }
   });
 
-module.exports.upload2 = function(req,res){
+module.exports.upload = function(req,res){
     var partial = multer({
         storage: storage,
         fileFilter: function (req, file, callback) {
             var ext = path.extname(file.originalname);
-            var tab = ['.png']
-            if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg' && ext !== '.pdf') {
-                return callback(new Error('Only images are allowed'))
+            var tab = ['.pptx','.docx','.pdf','.png','.html','.css','.js','.php','.sql','.json','.xml']
+            //if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg' && ext !== '.pdf') {
+            if (tab.indexOf(ext) <= -1) {
+                //return callback(new Error('This file format is not supported'))
+                return res.status(501).send('This file format is not supported')
             }
             callback(null, true)
         }
@@ -60,7 +62,7 @@ module.exports.upload2 = function(req,res){
           if(err) {
               return res.status(500).send("Error uploading file.");
           }
-          res.status(200).send("File is uploaded");
+          res.status(200).send("File is uploaded in the app");
       });
   }
 

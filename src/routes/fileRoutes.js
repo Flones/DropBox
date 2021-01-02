@@ -18,7 +18,6 @@ var storage = multer.diskStorage({
 var upload = multer({ dest: './uploads/', inMemory: true, storage: storage });
 // var upload = multer({ storage: storage });
 
-
 // Upload des fichiers
 //, [middleToken.verifyToken, middleFiles.middelFiles]
 filesRoutes.post('/upload', middleFiles.middelFiles, upload.single('files'), controller.uploadFiles)

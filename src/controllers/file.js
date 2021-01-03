@@ -5,7 +5,7 @@ const File = require('../models/file');
 var dir = "./uploads"
 
 
-// Upload d'un file
+// Upload d'un file // marche pa
 module.exports.upload2 = (req, res) => {
 
     let file = new File({
@@ -40,7 +40,8 @@ const storage =   multer.diskStorage({
       })
     },
     filename: function (req, file, callback) {
-        callback(null, path.basename(file.originalname) + "_" + Date.now() /*  + path.extname(file.originalname) */);
+        callback(null, path.basename(file.originalname, path.extname(file.originalname)) 
+        + "_" + Date.now() + path.extname(file.originalname)); // nom_2020.pdf
     }
   });
 

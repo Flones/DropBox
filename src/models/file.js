@@ -1,3 +1,4 @@
+const { file } = require('googleapis/build/src/apis/file');
 const User = require('./user');
 
 const mongoose = require('mongoose'),
@@ -5,7 +6,7 @@ const mongoose = require('mongoose'),
 
 const fileSchema = new Schema({
     file: {
-        type: String,
+        type: File,
         required: [true, "Nom du fichier..."]
     },
     user: {

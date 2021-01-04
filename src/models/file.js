@@ -5,9 +5,12 @@ const mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 const fileSchema = new Schema({
-    file: {
-        type: File,
-        required: [true, "Nom du fichier..."]
+    path: {
+        type: String,
+        required: [true, "Path du fichier..."]
+    },
+    caption: {
+        type: String
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,

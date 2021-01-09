@@ -6,6 +6,86 @@ const express = require('express'),
     fs = require('fs'),
     path = require('path'),
     route = require('./src/routes');
+const crypto = require("crypto");
+const mongoose = require("mongoose");
+const GridFsStorage = require("multer-gridfs-storage");
+
+// DB
+const mongoURI = "mongodb://localhost:27017/test2DROPbox";
+
+
+// connection
+const conn = mongoose.createConnection(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+
+// init gfs
+let gfs;
+conn.once("open", () => {
+  // init stream
+  gfs = new mongoose.mongo.GridFSBucket(conn.db, {
+    bucketName: "uploads"
+  });
+});
+
+// Storage
+const storage = new GridFsStorage({
+    url: mongoURI,
+    file: (req, file) => {
+      return new Promise((resolve, reject) => {
+        crypto.randomBytes(16, (err, buf) => {
+          if (err) {
+            return reject(err);
+          }
+          const filename = buf.toString("hex") + path.extname(file.originalname);
+          const fileInfo = {
+            filename: filename,
+            bucketName: "uploads"
+          };
+          resolve(fileInfo);
+        });
+      });
+    }
+});
+  
+const upload = multer({
+    storage
+});
+
+  app.get("/", (req, res) => {
+    res.render("test")
+   })
+
+   app.post("/upload", upload.single("file"), (req, res) => {
+    res.redirect("/");
+  });
+
+  app.get("/image/:filename", (req, res) => {
+    // console.log('id', req.params.id)
+    const file = gfs
+      .find({
+        filename: req.params.filename
+      })
+      .toArray((err, files) => {
+        if (!files || files.length === 0) {
+          return res.status(404).json({
+            err: "no files exist"
+          });
+        }
+        gfs.openDownloadStreamByName(req.params.filename).pipe(res);
+      });
+  });
+
+// files/del/:id
+// Delete chunks from the db
+app.post("/files/del/:id", (req, res) => {
+    gfs.delete(new mongoose.Types.ObjectId(req.params.id), (err, data) => {
+      if (err) return res.status(404).json({ err: err.message });
+      res.redirect("/");
+    });
+  });
 
 global.db = require('./src/models');
 
@@ -22,8 +102,11 @@ const www = process.env.WWW || './public';
 // Middelware
 app.use(express.static(www));
 app.use(bodyParser.urlencoded({ extended: false }));
+app.set("view engine", "ejs");
 
 app.use(route); // charger nos différentes routes
+
+
 
 // Route par defaut
 app.get('*', (req, res) => {

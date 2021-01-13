@@ -6,9 +6,11 @@ const sendMail = require('./sendMail');
 //connexion avec google 
 const { google } = require('googleapis');
 const { OAuth2 } = google.auth;
+const fetch = require('node-fetch')
 
 const client = new OAuth2(config.ID_CLIENT_SERVICE_MAIL)
 
+const { CLIENT_URL } = config
 
 
 //enregistrement d'un utilisateur
@@ -72,6 +74,77 @@ module.exports.inscription = (req, res) => {
         });
     },
 
+    // Connexion des utilisateurs avec le compte google
+    module.exports.googleLogin = async(req, res) => {
+        try {
+            const { tokenId } = req.body
+
+            const verify = await client.verifyIdToken({ idToken: tokenId, audience: config.ID_CLIENT_SERVICE_MAIL })
+
+            const { email_verified, email, name } = verify.payload
+
+            const password = email + config.GOOGLE_SECRET
+
+            const passwordHash = await bcrypt.hash(password, 10)
+
+            if (!email_verified) return res.status(400).json({ msg: "Email de vérification n'est pas valide." })
+
+            const user = User.findOne({ email })
+
+            if (user) {
+                const isMathPassword = bcrypt.compareSync(password, user.password);
+                if (!isMathPassword) return res.status(400).json({ msg: "Le mot de passe est incorrect" })
+                res.json({ msg: "Vous êtes!" })
+            } else {
+                const newUser = new User({
+                    username: name,
+                    email: email,
+                    password: passwordHash,
+                    isActive: true
+                })
+                await newUser.save()
+                res.json({ msg: "Vous êtes connecté" })
+            }
+        } catch (err) {
+            return res.status(500).json({ msg: err.message })
+        }
+    },
+
+    // Connexion des utilisateurs avec le compte facebook
+    module.exports.facebookLogin = async(req, res) => {
+        try {
+            const { accessToken, userID } = req.body
+
+            const URL = `https://graph.facebook.com/v2.9/${userID}/?fields=id,name,email,picture&access_token=${accessToken}`
+
+            const data = await fetch(URL).then(res => res.json()).then(res => { return res })
+
+            const { email, name } = data
+
+            const password = email + config.FACEBOOK_SECRET
+
+            const passwordHash = await bcrypt.hash(password, 10)
+
+            const user = await User.findOne({ email })
+
+            if (user) {
+                const isMathPassword = bcrypt.compareSync(password, user.password)
+                if (!isMathPassword) return res.status(400).json({ msg: "Le mot de passe est incorrect" })
+                res.json({ msg: "Vous êtes connecté" })
+            } else {
+                const newUser = new User({
+                    username: name,
+                    email: email,
+                    password: passwordHash,
+                    isActive: true
+                })
+                await newUser.save()
+                res.json({ msg: "Vous êtes connecté" })
+            }
+        } catch (err) {
+            return res.status(500).json({ msg: err.message })
+        }
+    },
 
     //Envoyer un email à l'utilisateur pour renitialiser son mot de passe
     module.exports.forgotPassword = async(req, res) => {
@@ -160,15 +233,3 @@ module.exports.LogoutUser = async(req, res) => {
     }
 
 }
-
-// Connecter l'utilisateur avec son compte Google
-// module.exports.GoogleLogin = async(req, res) => {
-//     try {
-//         const { tokenId } = req.body
-//         const verify = await client.verifyIdToken({ idToken: tokenId, audience: config.ID_CLIENT_SERVICE_MAIL })
-//         console.log(verify)
-//     } catch (error) {
-//         return res.status(500).send({ message: err.message });
-
-//     }
-// }

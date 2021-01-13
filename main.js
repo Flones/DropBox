@@ -1,7 +1,7 @@
+const cors = require("cors");
 const express = require('express'),
     app = express(),
     bodyParser = require('body-parser'),
-    cors = require("cors"),
     route = require('./src/routes');
 
 global.db = require('./src/models');
@@ -16,9 +16,13 @@ app.use((req, res, next) => {
 const port = process.env.PORT || 5000;
 const www = process.env.WWW || './public';
 
+
+app.use(cors());
 // Middelware
+app.use(bodyParser.json());
+
 app.use(express.static(www));
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(route); // charger nos différentes routes
 

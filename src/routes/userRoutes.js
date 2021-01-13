@@ -30,4 +30,8 @@ userRoutes.delete('/delete/:id', [middleToken.verifyToken, middleAdmin.RoleAdmin
 // Déconnecter l'utilisateur
 userRoutes.get('/logout', controller.LogoutUser)
 
+
+// Connecter un utilisateur avec son compte Google
+// userRoutes.post('/googleLogin', controller.GoogleLogin)
+
 module.exports = userRoutes;

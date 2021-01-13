@@ -3,6 +3,12 @@ const config = require('../../env');
 const jwt = require('jsonwebtoken'); //pour créer, signer et vérifier les jetons
 const User = require('../models/user');
 const sendMail = require('./sendMail');
+//connexion avec google 
+const { google } = require('googleapis');
+const { OAuth2 } = google.auth;
+
+const client = new OAuth2(config.ID_CLIENT_SERVICE_MAIL)
+
 
 
 //enregistrement d'un utilisateur
@@ -129,22 +135,40 @@ module.exports.inscription = (req, res) => {
         } catch (err) {
             return res.status(500).send({ message: err.message });
         }
-    },
-
-    // Suppression d'un utilisateur
-    module.exports.deleteUser = async(req, res) => {
-        try {
-            await User.findByIdAndRemove(req.params.id, (err, user) => {
-                if (err) return res.status(500).send("Un problème dans la suppression de l'utilisateur");
-                res.status(200).send({ message: "Utilisateur supprimé avec succès" });
-            })
-          
-    //Déconnecter un utilisateur
-    module.exports.LogoutUser = async(req, res) => {
-        try {
-            res.status(200).send({ auth: false, token: null });
-
-        } catch (err) {
-            return res.status(500).send({ message: err.message });
-        }
     }
+
+// Suppression d'un utilisateur
+module.exports.deleteUser = async(req, res) => {
+    try {
+        await User.findByIdAndRemove(req.params.id, (err, user) => {
+            if (err) return res.status(500).send("Un problème dans la suppression de l'utilisateur");
+            res.status(200).send({ message: "Utilisateur supprimé avec succès" });
+        })
+    } catch (err) {
+        return res.status(500).send({ message: err.message });
+    }
+
+}
+
+//Déconnecter un utilisateur
+module.exports.LogoutUser = async(req, res) => {
+    try {
+        res.status(200).send({ auth: false, token: null });
+
+    } catch (err) {
+        return res.status(500).send({ message: err.message });
+    }
+
+}
+
+// Connecter l'utilisateur avec son compte Google
+// module.exports.GoogleLogin = async(req, res) => {
+//     try {
+//         const { tokenId } = req.body
+//         const verify = await client.verifyIdToken({ idToken: tokenId, audience: config.ID_CLIENT_SERVICE_MAIL })
+//         console.log(verify)
+//     } catch (error) {
+//         return res.status(500).send({ message: err.message });
+
+//     }
+// }

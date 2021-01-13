@@ -5,13 +5,15 @@ const express = require('express'),
     multer = require('multer'),
     fs = require('fs'),
     path = require('path'),
+    dbconnexion = require('./env'),
     route = require('./src/routes');
 const crypto = require("crypto");
+const router = express.Router();
 const mongoose = require("mongoose");
 const GridFsStorage = require("multer-gridfs-storage");
 
 // DB
-const mongoURI = "mongodb://localhost:27017/test2DROPbox";
+const mongoURI = dbconnexion.LOCAL;
 
 
 // connection
@@ -52,7 +54,7 @@ const storage = new GridFsStorage({
   
 const upload = multer({
     storage
-});
+}).single("myfile");
 
   app.get("/", (req, res) => {
     res.render("test")
@@ -61,6 +63,22 @@ const upload = multer({
    app.post("/upload", upload.single("file"), (req, res) => {
     res.redirect("/");
   });
+
+  const obj =(req,res) => {
+    console.log("nigga")
+    upload(req, res, () => {
+       console.log("Request ---", req.body);
+       console.log("Request file ---", req.file);//Here you get file.
+       const file = new File();
+       file.meta_data = req.file;
+       file.save().then(()=>{
+       res.send({message:"uploaded successfully"})
+       })
+       /*Now do where ever you want to do*/
+    });
+ }
+ 
+ app.post("/upupup", obj);
 
   app.get("/image/:filename", (req, res) => {
     // console.log('id', req.params.id)
@@ -105,7 +123,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.set("view engine", "ejs");
 
 app.use(route); // charger nos différentes routes
-
 
 
 // Route par defaut

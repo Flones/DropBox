@@ -51,21 +51,14 @@ const storage = new GridFsStorage({
       });
     }
 });
-  
-const upload = multer({
-    storage
-}).single("myfile");
 
   app.get("/", (req, res) => {
     res.render("test")
    })
 
-   app.post("/upload", upload.single("file"), (req, res) => {
-    res.redirect("/");
-  });
 
   const obj =(req,res) => {
-    console.log("nigga")
+    console.log("next")
     upload(req, res, () => {
        console.log("Request ---", req.body);
        console.log("Request file ---", req.file);//Here you get file.

@@ -46,10 +46,9 @@ const sendMail = (to, url, message) => {
             <a href=${url} style="background: crimson; text-decoration: none; color: white; padding: 10px 20px; margin: 10px 0; display: inline-block;">${message}</a>
         
             <p>Si le bouton ne fonctionne pas vous pouvez cliquer sur ce lien ou le copier et coller dans le navigateur</p>
-        
+    
             <div>${url}</div>
-            </div>
-        `
+            </div> `
     }
 
     smptTransport.sendMail(mailOptions, (err, infor) => {

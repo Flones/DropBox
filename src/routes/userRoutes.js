@@ -12,6 +12,12 @@ userRoutes.post('/inscription', [middleUser.checkDuplicateData, middleUser.verif
 // Connexion de l'utilisateur
 userRoutes.post('/connexion', middleUser.verifyLoginData, controller.connexion)
 
+// Connexion de l'utilisateur avec le compte google 
+userRoutes.post('/google_login', controller.googleLogin)
+
+// Connexion de l'utilisateur avec le compte facebook 
+userRoutes.post('/facebook_login', controller.facebookLogin)
+
 // envoie d'email pour la renitialisation du mot de passe de l'utilisateur
 userRoutes.post('/forgot', middleUser.emailForgotPassword, controller.forgotPassword)
 

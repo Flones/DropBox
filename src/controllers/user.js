@@ -89,7 +89,7 @@ module.exports.inscription = (req, res) => {
 
             if (!email_verified) return res.status(400).json({ msg: "Email de vérification n'est pas valide." })
 
-            const user = User.findOne({ email })
+            const user = await User.findOne({ email })
 
             if (user) {
                 const isMathPassword = bcrypt.compareSync(password, user.password);

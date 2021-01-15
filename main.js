@@ -52,27 +52,6 @@ const storage = new GridFsStorage({
     }
 });
 
-  app.get("/", (req, res) => {
-    res.render("test")
-   })
-
-
-  const obj =(req,res) => {
-    console.log("next")
-    upload(req, res, () => {
-       console.log("Request ---", req.body);
-       console.log("Request file ---", req.file);//Here you get file.
-       const file = new File();
-       file.meta_data = req.file;
-       file.save().then(()=>{
-       res.send({message:"uploaded successfully"})
-       })
-       /*Now do where ever you want to do*/
-    });
- }
- 
- app.post("/upupup", obj);
-
   app.get("/image/:filename", (req, res) => {
     // console.log('id', req.params.id)
     const file = gfs
@@ -113,7 +92,7 @@ const www = process.env.WWW || './public';
 // Middelware
 app.use(express.static(www));
 app.use(bodyParser.urlencoded({ extended: false }));
-app.set("view engine", "ejs");
+//app.set("view engine", "ejs");
 
 app.use(route); // charger nos différentes routes
 

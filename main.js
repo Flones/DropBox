@@ -1,7 +1,10 @@
-const cors = require("cors");
 const express = require('express'),
     app = express(),
     bodyParser = require('body-parser'),
+    cors = require("cors"),
+    multer = require('multer'),
+    fs = require('fs'),
+    path = require('path'),
     route = require('./src/routes');
 
 global.db = require('./src/models');

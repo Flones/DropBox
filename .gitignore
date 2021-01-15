@@ -106,3 +106,4 @@ dist
 
 env.js
 package-lock.json
+/uploads
